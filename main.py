@@ -7,7 +7,7 @@ import numpy as np
 from numba import njit, prange
 
 
-MAX_SIZE = 2 ** 13
+MAX_SIZE = 2 ** 14
 
 
 def get_image(path, size=None):
@@ -19,7 +19,7 @@ def get_image(path, size=None):
         image = image[h // 2 - side // 2:h // 2 + side // 2, w // 2 - side // 2:w // 2 + side // 2]
 
     if size is not None:
-        image = cv2.resize(image, size)
+        image = cv2.resize(image, size, interpolation=cv2.INTER_AREA)
 
     return image
 
@@ -55,8 +55,10 @@ def get_dominant_colors(image_path, image_size):
 
 @njit(parallel=True)
 def closest_color(colors, color):
-    distances = np.sqrt(np.sum(np.power(colors - color, 2), axis=1))
-    return np.argmin(distances)
+    distances = np.sqrt(np.sum(np.abs(colors - color), axis=1))
+    lowest = np.argwhere(distances == np.min(distances))
+
+    return lowest[np.random.choice(lowest.shape[0], size=1)][0, 0]
 
 
 def get_output_image(image_size, paths, index):
@@ -87,7 +89,7 @@ def arrange_images(images, image_size, output_size):
 
 
 def main(image_path, target):
-    partition_size = 20
+    partition_size = 4
     image_size = 64
 
     dom_colors, paths = get_dominant_colors(image_path, image_size)
