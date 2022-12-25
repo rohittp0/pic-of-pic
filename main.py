@@ -7,6 +7,9 @@ import numpy as np
 from numba import njit, prange
 
 
+MAX_SIZE = 2 ** 13
+
+
 def get_image(path, size=None):
     image = cv2.imread(path)
 
@@ -89,7 +92,8 @@ def main():
     dom_colors, paths = get_dominant_colors(image_path, image_size)
 
     target_image = get_image(target)
-    target_size = round(target_image.shape[0] / partition_size)
+    target_size = target_image.shape[0] / partition_size
+    target_size = round(min(MAX_SIZE / image_size, target_size))
 
     target_image = cv2.resize(target_image, (target_size, target_size), interpolation=cv2.INTER_AREA)
 
