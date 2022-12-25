@@ -34,6 +34,10 @@ def get_dominant_color(image):
 
 def get_dominant_color_from_path(path, image_size):
     image = get_image(path, (image_size, image_size))
+
+    if image is None:
+        return -255, -255, -255
+
     return get_dominant_color(image)
 
 
@@ -82,10 +86,7 @@ def arrange_images(images, image_size, output_size):
     return output
 
 
-def main():
-    image_path = "images/varsha"
-    target = "images/target.jpg"
-
+def main(image_path, target):
     partition_size = 20
     image_size = 64
 
@@ -125,4 +126,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main("images/album", "images/target.jpeg")
