@@ -87,7 +87,7 @@ def main():
     target = "images/target.jpg"
 
     partition_size = 20
-    image_size = 128
+    image_size = 64
 
     dom_colors, paths = get_dominant_colors(image_path, image_size)
 
