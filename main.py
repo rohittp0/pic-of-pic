@@ -56,9 +56,7 @@ def get_dominant_colors(image_path, image_size):
 @njit(parallel=True)
 def closest_color(colors, color):
     distances = np.sqrt(np.sum(np.abs(colors - color), axis=1))
-    lowest = np.argwhere(distances == np.min(distances))
-
-    return lowest[np.random.choice(lowest.shape[0], size=1)][0, 0]
+    return np.argmin(distances)
 
 
 def get_output_image(image_size, paths, index):
